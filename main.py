@@ -34,7 +34,11 @@ class Stimulus():
 snake = Snake()
 stimulus = Stimulus()
 
-
+def helper_grid():
+    for x in range(0, WIDTH, SIZE):
+        for y in range(0, HEIGHT, SIZE):
+            rect = pygame.Rect(x, y, SIZE, SIZE)
+            pygame.draw.rect(screen, "white", rect, 1)
 
 while running:
     for event in pygame.event.get():
@@ -46,10 +50,7 @@ while running:
     snake.draw_snake()
     stimulus.draw_stimulus()
 
-    for x in range(0, WIDTH, SIZE):
-        for y in range(0, HEIGHT, SIZE):
-            rect = pygame.Rect(x, y, SIZE, SIZE)
-            pygame.draw.rect(screen, "white", rect, 1)
+    helper_grid()
 
     pygame.display.flip()
 
