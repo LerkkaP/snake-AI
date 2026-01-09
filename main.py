@@ -1,8 +1,8 @@
 import pygame
 import random
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 600
+HEIGHT = 400
 SIZE = 25
 
 pygame.init()
@@ -10,17 +10,34 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
+UP    = (0, -SIZE)
+DOWN  = (0, SIZE)
+LEFT  = (-SIZE, 0)
+RIGHT = (SIZE, 0)
+
 class Snake():
     def __init__(self):
         self.size = SIZE
-        self.head = pygame.Rect(0, 0, self.size, self.size)
-        self.head.center = WIDTH // 2, HEIGHT // 2
-        self.head.x = self.head.center[0]
-        self.head.y = self.head.center[1]
+        self.head = pygame.Rect(WIDTH // 2, HEIGHT // 2, self.size, self.size)
+        self.direction = RIGHT
         self._color = "green"
 
     def draw_snake(self):
         pygame.draw.rect(screen, self._color, self.head)
+
+    def move_snake(self):
+        self.head.x += self.direction[0]
+        self.head.y += self.direction[1]
+
+    def set_direction(self, keys):
+        if keys[pygame.K_UP] and self.direction != DOWN:
+            self.direction = UP
+        elif keys[pygame.K_DOWN] and self.direction != UP:
+            self.direction = DOWN
+        elif keys[pygame.K_LEFT] and self.direction != RIGHT:
+            self.direction = LEFT
+        elif keys[pygame.K_RIGHT] and self.direction != LEFT:
+            self.direction = RIGHT
 
 class Stimulus():
     def __init__(self):
@@ -49,11 +66,14 @@ while running:
 
     snake.draw_snake()
     stimulus.draw_stimulus()
+    keys = pygame.key.get_pressed() 
+    snake.set_direction(keys)
+    snake.move_snake()
 
     helper_grid()
 
     pygame.display.flip()
 
-    clock.tick(8)
+    clock.tick(10)
 
 pygame.quit()
