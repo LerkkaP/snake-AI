@@ -42,11 +42,20 @@ class Snake():
 class Stimulus():
     def __init__(self):
         self._color = "red"
-        self.x = random.randrange(0, WIDTH, SIZE)
-        self.y = random.randrange(0, HEIGHT, SIZE)
+        self.rect = pygame.Rect(random.randrange(0, WIDTH, SIZE),
+                                random.randrange(0, HEIGHT, SIZE),
+                                SIZE,
+                                SIZE)
 
     def draw_stimulus(self):
-        pygame.draw.rect(screen, self._color, pygame.Rect(self.x, self.y, SIZE, SIZE))
+        pygame.draw.rect(screen, self._color, self.rect)        
+
+    def collision(self, head_rect):
+        if self.rect.colliderect(head_rect):
+            self.rect.topleft = (
+                random.randrange(0, WIDTH, SIZE),
+                random.randrange(0, HEIGHT, SIZE)
+            )
 
 snake = Snake()
 stimulus = Stimulus()
@@ -62,11 +71,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    keys = pygame.key.get_pressed() 
+
     screen.fill("black")
 
     snake.draw_snake()
     stimulus.draw_stimulus()
-    keys = pygame.key.get_pressed() 
+    stimulus.collision(snake.head)
     snake.set_direction(keys)
     snake.move_snake()
 
