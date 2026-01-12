@@ -19,27 +19,27 @@ class Snake():
     def __init__(self):
         self.size = SIZE
         self.direction = RIGHT
-        self.parts = [
+        self.body = [
             pygame.Rect(WIDTH // 2, HEIGHT // 2, SIZE, SIZE),
             pygame.Rect(WIDTH // 2 - SIZE, HEIGHT // 2, SIZE, SIZE),
         ]
-        self.head = self.parts[0]
+        self.head = self.body[0]
         self._color = "green"
 
     def draw_snake(self):
-        for part in self.parts:
+        for part in self.body:
             pygame.draw.rect(screen, self._color, part)
 
     def move_snake(self):
-        previous_positions = [part.topleft for part in self.parts]
+        previous_positions = [part.topleft for part in self.body]
 
         # head movement
-        self.parts[0].x += self.direction[0]
-        self.parts[0].y += self.direction[1]
+        self.head.x += self.direction[0]
+        self.head.y += self.direction[1]
 
-        # rest of the parts
-        for i in range(1, len(self.parts)):
-            self.parts[i].topleft = previous_positions[i - 1]
+        # rest of the body
+        for i in range(1, len(self.body)):
+            self.body[i].topleft = previous_positions[i - 1]        
 
     def set_direction(self, keys):
         if keys[pygame.K_UP] and self.direction != DOWN:
