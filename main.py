@@ -22,13 +22,14 @@ class Snake():
         self.body = [
             pygame.Rect(WIDTH // 2, HEIGHT // 2, SIZE, SIZE),
             pygame.Rect(WIDTH // 2 - SIZE, HEIGHT // 2, SIZE, SIZE),
+            pygame.Rect(WIDTH // 2 - SIZE*2, HEIGHT // 2, SIZE, SIZE),
         ]
         self.head = self.body[0]
         self._color = "green"
 
     def draw_snake(self):
         for part in self.body:
-            pygame.draw.rect(screen, self._color, part)
+            pygame.draw.rect(screen, self._color, part, border_radius=5)
 
     def move_snake(self):
         previous_positions = [part.topleft for part in self.body]
@@ -105,7 +106,7 @@ while running:
     snake.draw_snake()
     stimulus.draw_stimulus()
 
-    helper_grid()
+    #helper_grid()
 
     pygame.display.flip()
 
