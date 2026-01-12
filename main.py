@@ -39,7 +39,11 @@ class Snake():
 
         # rest of the body
         for i in range(1, len(self.body)):
-            self.body[i].topleft = previous_positions[i - 1]        
+            self.body[i].topleft = previous_positions[i - 1]     
+
+    def grow_snake(self):
+        tail = self.body[-1]
+        self.body.append(pygame.Rect(tail.x, tail.y, SIZE, SIZE))
 
     def set_direction(self, keys):
         if keys[pygame.K_UP] and self.direction != DOWN:
@@ -54,20 +58,24 @@ class Snake():
 class Stimulus():
     def __init__(self):
         self._color = "red"
-        self.rect = pygame.Rect(random.randrange(0, WIDTH, SIZE),
-                                random.randrange(0, HEIGHT, SIZE),
-                                SIZE,
-                                SIZE)
+        self.rect = self.random_position()
+        
+    def random_position(self):
+        return pygame.Rect(
+            random.randrange(0, WIDTH, SIZE),
+            random.randrange(0, HEIGHT, SIZE),
+            SIZE,
+            SIZE
+        )
 
     def draw_stimulus(self):
         pygame.draw.rect(screen, self._color, self.rect)        
 
     def collision(self, head_rect):
         if self.rect.colliderect(head_rect):
-            self.rect.topleft = (
-                random.randrange(0, WIDTH, SIZE),
-                random.randrange(0, HEIGHT, SIZE)
-            )
+            self.rect = self.random_position()
+            return True
+        return False
 
 snake = Snake()
 stimulus = Stimulus()
@@ -84,14 +92,18 @@ while running:
             running = False
 
     keys = pygame.key.get_pressed() 
+    snake.set_direction(keys)
+
+    snake.move_snake()
+
+    
+    if stimulus.collision(snake.head):
+        snake.grow_snake()
 
     screen.fill("black")
 
     snake.draw_snake()
     stimulus.draw_stimulus()
-    stimulus.collision(snake.head)
-    snake.set_direction(keys)
-    snake.move_snake()
 
     helper_grid()
 
