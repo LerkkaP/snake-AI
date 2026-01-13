@@ -56,6 +56,14 @@ class Snake():
         elif keys[pygame.K_RIGHT] and self.direction != LEFT:
             self.direction = RIGHT
 
+    def collision(self):
+        screen_rect = pygame.Rect(0, 0, WIDTH, HEIGHT)
+        return not screen_rect.contains(self.head)
+        #in_bounds = pygame.Rect(0, 0, WIDTH - SIZE, HEIGHT - SIZE).collidepoint(self.head.x, self.head.y)
+        #if not in_bounds:
+            #return True
+        #return False
+
 class Stimulus():
     def __init__(self):
         self._color = "red"
@@ -96,10 +104,11 @@ while running:
     snake.set_direction(keys)
 
     snake.move_snake()
-
     
     if stimulus.collision(snake.head):
         snake.grow_snake()
+    if snake.collision():
+        running = False
 
     screen.fill("black")
 
