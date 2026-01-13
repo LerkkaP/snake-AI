@@ -58,11 +58,12 @@ class Snake():
 
     def collision(self):
         screen_rect = pygame.Rect(0, 0, WIDTH, HEIGHT)
-        return not screen_rect.contains(self.head)
-        #in_bounds = pygame.Rect(0, 0, WIDTH - SIZE, HEIGHT - SIZE).collidepoint(self.head.x, self.head.y)
-        #if not in_bounds:
-            #return True
-        #return False
+        # out of screen
+        if not screen_rect.contains(self.head):
+            return True
+        # crashes own body
+        elif self.head in self.body[1:]:
+            return True
 
 class Stimulus():
     def __init__(self):
