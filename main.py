@@ -1,100 +1,15 @@
 import pygame
-import random
-
-WIDTH = 600
-HEIGHT = 400
-SIZE = 25
+from snake import Snake
+from stimulus import Stimulus
+from settings import WIDTH, HEIGHT, FPS, BLACK
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
-UP    = (0, -SIZE)
-DOWN  = (0, SIZE)
-LEFT  = (-SIZE, 0)
-RIGHT = (SIZE, 0)
-
-class Snake():
-    def __init__(self):
-        self.size = SIZE
-        self.direction = RIGHT
-        self.body = [
-            pygame.Rect(WIDTH // 2, HEIGHT // 2, SIZE, SIZE),
-            pygame.Rect(WIDTH // 2 - SIZE, HEIGHT // 2, SIZE, SIZE),
-            pygame.Rect(WIDTH // 2 - SIZE*2, HEIGHT // 2, SIZE, SIZE),
-        ]
-        self.head = self.body[0]
-        self._color = "green"
-
-    def draw_snake(self):
-        for part in self.body:
-            pygame.draw.rect(screen, self._color, part, border_radius=5)
-
-    def move_snake(self):
-        previous_positions = [part.topleft for part in self.body]
-
-        # head movement
-        self.head.x += self.direction[0]
-        self.head.y += self.direction[1]
-
-        # rest of the body
-        for i in range(1, len(self.body)):
-            self.body[i].topleft = previous_positions[i - 1]     
-
-    def grow_snake(self):
-        tail = self.body[-1]
-        self.body.append(pygame.Rect(tail.x, tail.y, SIZE, SIZE))
-
-    def set_direction(self, keys):
-        if keys[pygame.K_UP] and self.direction != DOWN:
-            self.direction = UP
-        elif keys[pygame.K_DOWN] and self.direction != UP:
-            self.direction = DOWN
-        elif keys[pygame.K_LEFT] and self.direction != RIGHT:
-            self.direction = LEFT
-        elif keys[pygame.K_RIGHT] and self.direction != LEFT:
-            self.direction = RIGHT
-
-    def collision(self):
-        screen_rect = pygame.Rect(0, 0, WIDTH, HEIGHT)
-        # out of screen
-        if not screen_rect.contains(self.head):
-            return True
-        # crashes own body
-        elif self.head in self.body[1:]:
-            return True
-
-class Stimulus():
-    def __init__(self):
-        self._color = "red"
-        self.rect = self.random_position()
-        
-    def random_position(self):
-        return pygame.Rect(
-            random.randrange(0, WIDTH, SIZE),
-            random.randrange(0, HEIGHT, SIZE),
-            SIZE,
-            SIZE
-        )
-
-    def draw_stimulus(self):
-        pygame.draw.rect(screen, self._color, self.rect)        
-
-    def collision(self, head_rect):
-        if self.rect.colliderect(head_rect):
-            self.rect = self.random_position()
-            return True
-        return False
-
 snake = Snake()
 stimulus = Stimulus()
-
-def helper_grid():
-    for x in range(0, WIDTH, SIZE):
-        for y in range(0, HEIGHT, SIZE):
-            rect = pygame.Rect(x, y, SIZE, SIZE)
-            pygame.draw.rect(screen, "white", rect, 1)
 
 while running:
     for event in pygame.event.get():
@@ -103,7 +18,6 @@ while running:
 
     keys = pygame.key.get_pressed() 
     snake.set_direction(keys)
-
     snake.move_snake()
     
     if stimulus.collision(snake.head):
@@ -111,15 +25,10 @@ while running:
     if snake.collision():
         running = False
 
-    screen.fill("black")
-
-    snake.draw_snake()
-    stimulus.draw_stimulus()
-
-    #helper_grid()
-
+    screen.fill(BLACK)
+    snake.draw_snake(screen)
+    stimulus.draw_stimulus(screen)
     pygame.display.flip()
-
-    clock.tick(10)
+    clock.tick(FPS)
 
 pygame.quit()
