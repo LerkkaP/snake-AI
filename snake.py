@@ -50,3 +50,37 @@ class Snake():
         # crashes own body
         elif self.head in self.body[1:]:
             return True
+
+    def get_state(self, stimulus):
+        def danger_at(x, y):
+            rect = pygame.Rect(x, y, SIZE, SIZE)
+            # wall collision
+            if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT:
+                return 1
+            # body collision
+            if rect in self.body:
+                return 1
+            return 0
+
+        x = self.head.x
+        y = self.head.y
+        dx, dy = self.direction
+
+        danger_straight = danger_at(x + dx, y + dy)
+        danger_left = danger_at(x - dy, y + dx)
+        danger_right = danger_at(x + dy, y - dx)
+
+        stimulus_left = stimulus.rect.x < x
+        stimulus_right = stimulus.rect.x > x
+        stimulus_up = stimulus.rect.y < y
+        stimulus_down = stimulus.rect.y > y
+
+        return (
+            danger_straight,
+            danger_left,
+            danger_right,
+            stimulus_left,
+            stimulus_right,
+            stimulus_up,
+            stimulus_down
+        )
