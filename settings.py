@@ -4,7 +4,7 @@ HEIGHT = 400
 FPS = 10
 
 # Grid
-SIZE = 25
+SIZE = 50
 
 # Colors
 BLACK = (0, 0, 0)
