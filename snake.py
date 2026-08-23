@@ -70,17 +70,8 @@ class Snake():
         danger_left = danger_at(x - dy, y + dx)
         danger_right = danger_at(x + dy, y - dx)
 
-        stimulus_left = stimulus.rect.x < x
-        stimulus_right = stimulus.rect.x > x
-        stimulus_up = stimulus.rect.y < y
-        stimulus_down = stimulus.rect.y > y
-
         return (
             danger_straight,
             danger_left,
-            danger_right,
-            stimulus_left,
-            stimulus_right,
-            stimulus_up,
-            stimulus_down
+            danger_right
         )
