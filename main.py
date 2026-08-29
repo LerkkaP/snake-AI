@@ -9,7 +9,7 @@ clock = pygame.time.Clock()
 running = True
 
 snake = Snake()
-stimulus = Stimulus()
+stimulus = Stimulus(snake.body)
 
 while running:
     for event in pygame.event.get():
